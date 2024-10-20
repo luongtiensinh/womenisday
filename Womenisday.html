@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc mừng ngày Phụ nữ Việt Nam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #87CEEB;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .container {
+            text-align: center;
+            color: #fff;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            max-width: 80%;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        p {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        .flower {
+            position: absolute;
+            font-size: 2em;
+            user-select: none;
+        }
+        .cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .input-container {
+            margin-bottom: 20px;
+        }
+        #nameInput {
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            border: none;
+            width: 200px;
+            margin-right: 10px;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #FF69B4;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .button:hover {
+            background-color: #FF1493;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 20;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            background-color: #f68eea;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .modal-content img {
+            max-width: 100%;
+            max-height: 500px;
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            object-fit: cover;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .modal-content p {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-weight: 500;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 100%;
+        }
+        .close {
+            color: #e356cc;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chúc mừng ngày Phụ nữ Việt Nam 20/10</h1>
+        <p>Tôn vinh vẻ đẹp, sự dịu dàng và sức mạnh của người phụ nữ Việt Nam.</p>
+        <p>Chúc mọi (chị) em  phụ nữ ở hai bên cơ sở  luôn hạnh phúc,vui vẻ xinh đẹp và thành công!</p>
+        <div class="input-container">
+            <input type="text" id="nameInput" placeholder="Nhập tên của bạn">
+            <button class="button" onclick="sendWishes()"> Nhấn vào đây! </button>
+        </div>
+    </div>
+
+    <div id="wishModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="flowerImage" src="" alt="Hoa chúc mừng">
+            <p id="wishText"></p>
+        </div>
+    </div>
+
+    <script>
+        const flowers = [
+            'https://tse4.mm.bing.net/th?id=OIP.s7H_VhCQNWQw6nqQPive7wHaFj&pid=Api&P=0&h=180',
+            'https://tse4.mm.bing.net/th?id=OIP.PLmBfZ2uhPi71dXN7WuoJgHaHF&pid=Api&P=0&h=180',
+            'https://tse4.mm.bing.net/th?id=OIP.jQmbSRcdEUtl29gS9cw56wHaE7&pid=Api&P=0&h=180',
+            'https://tse3.mm.bing.net/th?id=OIP.EySpQuJEuaHTMijY4AAYqAHaE8&pid=Api&P=0&h=180'
+        ];
+
+        const wishes = [
+            'Chúc bạn đón nhận nhiều quà, biển hoa, và những lời khen ý nghĩa từ phái nam trong ngày hôm nay. Hy vọng bạn gặp thật nhiều may mắn, hạnh phúc, và niềm vui tràn đầy, đúng như mong đợi.',
+            'Trong dịp 20/10, tôi gửi đến bạn những lời chúc đầy sức khỏe, niềm vui, giống như âm nhạc êm đềm của chim sẻ, và được phú quý với nhiều tài lẻ, chắc chắn làm mọi việc đều suôn sẻ.',
+            'Chúc bạn một ngày 20/10 ngập tràn niềm vui với hoa và quà bên những người tôi yêu thương. Phải luôn cười thật tươi bởi vì hôm nay nụ cười của bạn  là đẹp nhất.',
+            'Đã đến 20/10, chúc mừng bạn trở nên ngày càng quyến rũ, trẻ trung, và luôn toả sáng như những bông hồng tươi rực ánh nắng.',
+            'Chúc các nàng luôn tươi cười rạng ngời như hít phải khí N2O. Bay bổng như nguyên tử H2. Thăng hoa như phân tử I2. Bản lĩnh như khí N2 và hiền hòa như phân tử H2O.',
+            'Chúc chị em phụ nữ luôn xinh đẹp, tươi trẻ và thành công!',
+            'Chúc bạn luôn rạng ngời như những bông hoa tươi thắm!',
+            'Chúc các chị em có một ngày 20/10 tràn ngập niềm vui và hạnh phúc!',
+            'Chúc bạn mãi xinh đẹp và tràn đầy năng lượng trong cuộc sống!'
+        ];
+
+        const femaleNames = ['Ngọc', 'Anh', 'Như', 'Trân', 'Xoay', 'Thảo', 'Huyền', 'Trang'];
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.textContent = '🌸';
+            flower.style.left = Math.random() * window.innerWidth + 'px';
+            flower.style.top = '-50px';
+            document.body.appendChild(flower);
+
+            const duration = Math.random() * 5 + 5; // 5-10 seconds
+            const finalY = window.innerHeight + 50;
+
+            flower.animate([
+                { transform: 'translateY(0) rotate(0deg)' },
+                { transform: `translateY(${finalY}px) rotate(360deg)` }
+            ], {
+                duration: duration * 1000,
+                easing: 'linear',
+                iterations: Infinity
+            });
+        }
+
+        function createCloud() {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            const size = Math.random() * 100 + 50;
+            cloud.style.width = size + 'px';
+            cloud.style.height = size / 2 + 'px';
+            cloud.style.left = -size + 'px';
+            cloud.style.top = Math.random() * window.innerHeight + 'px';
+            document.body.appendChild(cloud);
+
+            const duration = Math.random() * 20 + 20; // 20-40 seconds
+
+            cloud.animate([
+                { transform: 'translateX(0)' },
+                { transform: `translateX(${window.innerWidth + size}px)` }
+            ], {
+                duration: duration * 1000,
+                easing: 'linear',
+                iterations: Infinity
+            });
+        }
+
+        function removeDiacritics(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function sendWishes() {
+            const modal = document.getElementById('wishModal');
+            const flowerImage = document.getElementById('flowerImage');
+            const wishText = document.getElementById('wishText');
+            const nameInput = document.getElementById('nameInput');
+
+            const name = nameInput.value.trim();
+            const normalizedName = removeDiacritics(name.toLowerCase());
+
+            if (femaleNames.some(femaleName => removeDiacritics(femaleName.toLowerCase()) === normalizedName)) {
+                const randomFlower = flowers[Math.floor(Math.random() * flowers.length)];
+                const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+
+                flowerImage.src = randomFlower;
+                flowerImage.style.display = 'block';
+                wishText.textContent = `${randomWish} Chúc bạn (chị) ${name} luôn xinh đẹp và nở nụ cười trên môi, hạnh phúc!`;
+            } else {
+                flowerImage.style.display = 'none';
+                wishText.textContent = 'Con trai mà đòi hỏi nhiều hhh 😄';
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('wishModal');
+            modal.style.display = 'none';
+        }
+
+        // Create initial flowers and clouds
+        for (let i = 0; i < 5; i++) {
+            createFlower();
+            createCloud();
+        }
+
+        // Continue creating flowers and clouds
+        setInterval(createFlower, 3000);
+        setInterval(createCloud, 5000);
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('wishModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
